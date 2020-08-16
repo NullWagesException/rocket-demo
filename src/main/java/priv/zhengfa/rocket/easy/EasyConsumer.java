@@ -21,7 +21,7 @@ public class EasyConsumer {
     private DefaultMQPushConsumer consumer;
 
     public EasyConsumer() throws Exception {
-        consumer = new DefaultMQPushConsumer("easy-rocket");
+        consumer = new DefaultMQPushConsumer(JmsConfig.GROUP);
         consumer.setNamesrvAddr(JmsConfig.NAME_SERVER);
         consumer.subscribe(JmsConfig.TOPIC_EASY, "easy-message-1");
         consumer.registerMessageListener((MessageListenerConcurrently) (list, consumeConcurrentlyContext) -> {
@@ -34,6 +34,7 @@ public class EasyConsumer {
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
         consumer.start();
+        System.out.println("consumer启动...");
     }
 
     public static void main(String[] args) throws Exception {
