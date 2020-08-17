@@ -16,7 +16,7 @@ public class EasyProduce {
     private DefaultMQProducer producer;
 
     public EasyProduce() throws Exception {
-        producer = new DefaultMQProducer("easy-rocket");
+        producer = new DefaultMQProducer(JmsConfig.GROUP);
         producer.setNamesrvAddr(JmsConfig.NAME_SERVER);
         //不开启vip通道 开通口端口会减2
         producer.setVipChannelEnabled(false);

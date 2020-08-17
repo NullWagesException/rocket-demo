@@ -15,4 +15,6 @@ public class JmsConfig {
 
     public static String TOPIC_OFFLINE = "top_offline";
 
+    public static String GROUP = "easy-rocket";
+
 }
