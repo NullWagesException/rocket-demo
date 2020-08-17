@@ -1,6 +1,7 @@
 package priv.zhengfa.rocket.controller;
 
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,37 @@ public class RocketController {
     public String test() throws Exception {
         DefaultMQProducer mqProducer = produce.getProducer();
         //创建生产信息
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             Message message = new Message(JmsConfig.TOPIC_EASY, "easy-message-1", ("easy message：" + i).getBytes());
             SendResult send = mqProducer.send(message);
             System.out.println("---------生产消息：" + LocalTime.now().toString());
             System.out.println(send.toString());
         }
+
+        return "ok";
+    }
+
+    @GetMapping("/test_asyn")
+    public String testAsyn() throws Exception {
+        DefaultMQProducer mqProducer = produce.getProducer();
+        //创建生产信息
+        for (int i = 0; i < 10; i++) {
+            Message message = new Message(JmsConfig.TOPIC_EASY, "easy-message-1", ("easy message：" + i).getBytes());
+            mqProducer.send(message, new SendCallback() {
+                @Override
+                public void onSuccess(SendResult sendResult) {
+                    System.out.println("---------生产消息：" + LocalTime.now().toString());
+                    System.out.println(sendResult.toString());
+                }
+
+                @Override
+                public void onException(Throwable e) {
+                    System.out.println(e.getMessage());
+                }
+            });
+
+        }
+
         return "ok";
     }
 
