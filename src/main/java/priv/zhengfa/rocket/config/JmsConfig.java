@@ -11,10 +11,18 @@ public class JmsConfig {
 
     public static String TOPIC_EASY = "topic_easy";
 
+    public static String TOPIC_ORDER = "topic_order";
+
+    public static String TOPIC_BROAD_CAST = "topic_broad_cast";
+
     public static String TOPIC_INLINE = "top_inline";
 
     public static String TOPIC_OFFLINE = "top_offline";
 
     public static String GROUP = "easy-rocket";
+
+    public static String BROAD_GROUP = "broad-rocket";
+
+    public static String ORDER_GROUP = "order-rocket";
 
 }
