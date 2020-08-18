@@ -3,6 +3,7 @@
 # Compiled class file
 .idea
 target
+*.iml
 *.class
 
 # Log file
@@ -30,3 +31,5 @@ hs_err_pid*
 src/main/resources/
 src/test/
 target/generated-sources/
+/.idea/
+/target/
