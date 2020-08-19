@@ -17,6 +17,8 @@ public class JmsConfig {
 
     public static String TOPIC_BROAD_CAST = "topic_broad_cast";
 
+    public static String TOPIC_TRANSACTION= "topic_transaction";
+
     public static String TOPIC_INLINE = "top_inline";
 
     public static String TOPIC_OFFLINE = "top_offline";
@@ -28,5 +30,7 @@ public class JmsConfig {
     public static String ORDER_GROUP = "order-rocket";
 
     public static String SCHEDULE_GROUP = "schedule-rocket";
+
+    public static String TRANSACTION_GROUP = "transaction-rocket";
 
 }

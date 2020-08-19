@@ -1,9 +1,6 @@
 package priv.zhengfa.rocket.controller;
 
-import org.apache.rocketmq.client.producer.DefaultMQProducer;
-import org.apache.rocketmq.client.producer.MessageQueueSelector;
-import org.apache.rocketmq.client.producer.SendCallback;
-import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.*;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageQueue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,7 @@ import priv.zhengfa.rocket.config.JmsConfig;
 import priv.zhengfa.rocket.easy.EasyProduce;
 import priv.zhengfa.rocket.order.OrderedProduce;
 import priv.zhengfa.rocket.schedule.ScheduleProduce;
+import priv.zhengfa.rocket.transaction.TransactionProducer;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -37,6 +35,9 @@ public class RocketController {
 
     @Autowired
     ScheduleProduce scheduleProduce;
+
+    @Autowired
+    TransactionProducer transactionProducer;
 
     @GetMapping("/test")
     public String test() throws Exception {
@@ -160,6 +161,18 @@ public class RocketController {
                     System.out.println(e.getMessage());
                 }
             });
+
+        }
+        return "ok";
+    }
+
+    @GetMapping("/test_transaction")
+    public String testTransaction() throws Exception {
+        TransactionMQProducer producer = transactionProducer.getProducer();
+        //创建生产信息
+        for (int i = 1; i <= 3; i++) {
+            Message message = new Message(JmsConfig.TOPIC_TRANSACTION, "transaction", ("" + i).getBytes());
+            producer.sendMessageInTransaction(message,i);
 
         }
         return "ok";
