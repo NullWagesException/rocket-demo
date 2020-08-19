@@ -13,6 +13,7 @@ import priv.zhengfa.rocket.broadcast.BroadCastProduce;
 import priv.zhengfa.rocket.config.JmsConfig;
 import priv.zhengfa.rocket.easy.EasyProduce;
 import priv.zhengfa.rocket.order.OrderedProduce;
+import priv.zhengfa.rocket.schedule.ScheduleProduce;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -33,6 +34,9 @@ public class RocketController {
 
     @Autowired
     OrderedProduce orderedProduce;
+
+    @Autowired
+    ScheduleProduce scheduleProduce;
 
     @GetMapping("/test")
     public String test() throws Exception {
@@ -132,6 +136,31 @@ public class RocketController {
                     return list.get( index);
                 }
             },i);
+        }
+        return "ok";
+    }
+
+    @GetMapping("/test_schedule")
+    public String testSchedule() throws Exception {
+        DefaultMQProducer mqProducer = scheduleProduce.getProducer();
+        //创建生产信息
+        for (int i = 0; i < 10; i++) {
+            Message message = new Message(JmsConfig.TOPIC_SCHEDULE, "schedule_message", ("message：" + i).getBytes());
+            // 设置延迟级别
+            message.setDelayTimeLevel(3);
+            mqProducer.send(message, new SendCallback() {
+                @Override
+                public void onSuccess(SendResult sendResult) {
+                    System.out.println("---------生产消息：" + LocalTime.now().toString());
+                    System.out.println(sendResult.toString());
+                }
+
+                @Override
+                public void onException(Throwable e) {
+                    System.out.println(e.getMessage());
+                }
+            });
+
         }
         return "ok";
     }
