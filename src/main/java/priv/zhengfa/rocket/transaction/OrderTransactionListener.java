@@ -26,6 +26,11 @@ public class OrderTransactionListener implements TransactionListener {
         // 代表事务成功
         if ("1".equals(str)){
             System.out.println("事务成功" + LocalTime.now());
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return LocalTransactionState.COMMIT_MESSAGE;
         }
         // 代表事务失败
@@ -49,6 +54,6 @@ public class OrderTransactionListener implements TransactionListener {
     @Override
     public LocalTransactionState checkLocalTransaction(MessageExt messageExt) {
         System.out.println("事务回查" + LocalTime.now());
-        return LocalTransactionState.UNKNOW;
+        return LocalTransactionState.COMMIT_MESSAGE;
     }
 }

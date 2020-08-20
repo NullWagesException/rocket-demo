@@ -5,6 +5,10 @@ import org.apache.rocketmq.client.consumer.listener.*;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import priv.zhengfa.rocket.config.JmsConfig;
 
 import java.nio.charset.StandardCharsets;
@@ -16,29 +20,12 @@ import java.util.List;
  * @Date: 2020-08-15 22:17
  * @Description:
  */
-public class EasyConsumer {
+@RocketMQMessageListener(topic = "topic_easy", consumerGroup = "easy-rocket")
+@Service
+public class EasyConsumer implements RocketMQListener<String> {
 
-    private DefaultMQPushConsumer consumer;
-
-    public EasyConsumer() throws Exception {
-        consumer = new DefaultMQPushConsumer(JmsConfig.GROUP);
-        consumer.setNamesrvAddr(JmsConfig.NAME_SERVER);
-        consumer.subscribe(JmsConfig.TOPIC_EASY, "easy-message-1");
-        consumer.registerMessageListener((MessageListenerConcurrently) (list, consumeConcurrentlyContext) -> {
-            for (Message msg : list) {
-                //消费者获取消息 这里只输出 不做后面逻辑处理
-                System.out.println("---------消费消息：" + LocalTime.now());
-                String body = new String(msg.getBody(), StandardCharsets.UTF_8);
-                System.out.println(body);
-            }
-            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-        });
-        consumer.start();
-        System.out.println("consumer启动...");
+    @Override
+    public void onMessage(String s) {
+        System.out.println("消费消息:" + s);
     }
-
-    public static void main(String[] args) throws Exception {
-        new EasyConsumer();
-    }
-
 }

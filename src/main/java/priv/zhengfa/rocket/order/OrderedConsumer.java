@@ -22,16 +22,13 @@ public class OrderedConsumer {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(JmsConfig.ORDER_GROUP);
         consumer.setNamesrvAddr(JmsConfig.NAME_SERVER);
         consumer.subscribe(JmsConfig.TOPIC_ORDER, "order_message");
-        consumer.registerMessageListener(new MessageListenerOrderly() {
-            @Override
-            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeOrderlyContext) {
-                consumeOrderlyContext.setAutoCommit(true);
-                for (MessageExt msg : list) {
-                    String body = new String(msg.getBody(), StandardCharsets.UTF_8);
-                    System.out.println(body);
-                }
-                return ConsumeOrderlyStatus.SUCCESS;
+        consumer.registerMessageListener((MessageListenerOrderly) (list, consumeOrderlyContext) -> {
+            consumeOrderlyContext.setAutoCommit(true);
+            for (MessageExt msg : list) {
+                String body = new String(msg.getBody(), StandardCharsets.UTF_8);
+                System.out.println(body);
             }
+            return ConsumeOrderlyStatus.SUCCESS;
         });
         consumer.start();
         System.out.println("顺序消费者启动...");

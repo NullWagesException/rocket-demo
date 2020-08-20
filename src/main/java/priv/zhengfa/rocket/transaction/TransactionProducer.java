@@ -12,7 +12,6 @@ import javax.annotation.PostConstruct;
  * @Date: 2020/8/19 14:04
  * @Description:
  */
-@Component
 public class TransactionProducer {
 
     private TransactionMQProducer producer;

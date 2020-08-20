@@ -9,7 +9,6 @@ import priv.zhengfa.rocket.config.JmsConfig;
  * @Date: 2020-08-15 22:28
  * @Description:
  */
-@Component
 public class BroadCastProduce {
 
     private DefaultMQProducer producer;
