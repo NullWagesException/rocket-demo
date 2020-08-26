@@ -18,7 +18,7 @@ public class EasyProduce {
     private final static String INIT = "start";
     private final static String DESTROY = "shutdown";
 
-    @Bean(initMethod = "start", destroyMethod = DESTROY)
+    @Bean
     public DefaultMQProducer mqProducer() {
 
         DefaultMQProducer producer = new DefaultMQProducer();
