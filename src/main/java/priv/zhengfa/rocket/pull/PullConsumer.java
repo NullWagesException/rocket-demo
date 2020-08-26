@@ -1,8 +1,7 @@
-package priv.zhengfa.rocket.easy;
+package priv.zhengfa.rocket.pull;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPullConsumer;
 import org.apache.rocketmq.client.consumer.PullResult;
-import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.message.MessageQueue;
 import priv.zhengfa.rocket.config.JmsConfig;
@@ -13,22 +12,24 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @Author: zhengfa
- * @Date: 2020/8/17 9:57
+ * @Author: nullWagesException
+ * @Date: 2020-08-16 23:15
  * @Description:
  */
-public class EasyPullConsumer {
+public class PullConsumer {
 
-    private static final Map<MessageQueue, Long> OFFSET_TABLE = new HashMap<MessageQueue, Long>();
+    private DefaultMQPullConsumer consumer;
 
-    public static void main(String[] args) throws MQClientException {
-        DefaultMQPullConsumer consumer = new DefaultMQPullConsumer(JmsConfig.GROUP);
+    private static final Map<MessageQueue, Long> offsetTable = new HashMap<MessageQueue, Long>();
+
+    public PullConsumer() throws Exception {
+        consumer = new DefaultMQPullConsumer(JmsConfig.GROUP);
         consumer.setNamesrvAddr(JmsConfig.NAME_SERVER);
         consumer.start();
 
-        Set<MessageQueue> mqs = consumer.fetchSubscribeMessageQueues(JmsConfig.TOPIC_EASY);
+        Set<MessageQueue> mqs = consumer.fetchSubscribeMessageQueues("TopicStudent");
         for (MessageQueue mq : mqs) {
-            System.out.println("Consume from the queue: " + mq);
+            System.err.println("Consume from the queue: " + mq);
             SINGLE_MQ:
             while (true){
                 try {
@@ -58,11 +59,11 @@ public class EasyPullConsumer {
     }
 
     private static void putMessageQueueOffset(MessageQueue mq, long offset) {
-        OFFSET_TABLE.put(mq, offset);
+        offsetTable.put(mq, offset);
     }
 
     private static long getMessageQueueOffset(MessageQueue mq) {
-        Long offset = OFFSET_TABLE.get(mq);
+        Long offset = offsetTable.get(mq);
         if (offset != null) {
             return offset;
         }

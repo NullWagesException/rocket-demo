@@ -2,6 +2,8 @@ package priv.zhengfa.rocket.easy;
 
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import priv.zhengfa.rocket.config.JmsConfig;
 
@@ -10,24 +12,21 @@ import priv.zhengfa.rocket.config.JmsConfig;
  * @Date: 2020-08-15 22:28
  * @Description:
  */
-@Component
+@Configuration
 public class EasyProduce {
 
-    private DefaultMQProducer producer;
+    private final static String INIT = "start";
+    private final static String DESTROY = "shutdown";
 
-    public EasyProduce() throws Exception {
-        producer = new DefaultMQProducer(JmsConfig.GROUP);
+    @Bean
+    public DefaultMQProducer mqProducer() {
+
+        DefaultMQProducer producer = new DefaultMQProducer();
         producer.setNamesrvAddr(JmsConfig.NAME_SERVER);
-        //不开启vip通道 开通口端口会减2
-        producer.setVipChannelEnabled(false);
-        producer.start();
-    }
-
-    public DefaultMQProducer getProducer() {
+        producer.setProducerGroup(JmsConfig.GROUP);
+        /*发送失败不重试*/
+        producer.setRetryAnotherBrokerWhenNotStoreOK(false);
         return producer;
     }
 
-    public void setProducer(DefaultMQProducer producer) {
-        this.producer = producer;
-    }
 }
